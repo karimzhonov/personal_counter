@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: django-src
+    build: ./server
+    restart: always
+    expose:
+      - 8000 # nginx riderect to this port
+    volumes:
+      - ./server:/app # Valume for not restarting docker container while coding
+      - ./server/static:/app/static # Static value
+      - ./server/media:/app/media # Media value
+    command: gunicorn -c gunicorn.py project.wsgi
+
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./server/static:/app/static # Static value
+      - ./server/media:/app/media # Media value
+    depends_on:
+      - web
