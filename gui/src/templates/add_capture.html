@@ -1,0 +1,66 @@
+<div class="card mb-3 p-2" id="add_capture">
+    <div class="row mb-4 g-3 align-items-center">
+        <div class="col-2">
+            <label for="capture_name" class="form-label">Name camera</label>
+        </div>
+        <div class="col-10">
+            <input value="{{ name }}" type="text" class="form-control" id="capture_name"
+                   aria-describedby="capture_name_help">
+        </div>
+        <div class="col-12 mt-0">
+            <div id="capture_name_help" class="form-text">Camera name must be unique</div>
+        </div>
+    </div>
+    <div class="row mb-4 g-3 align-items-center">
+        <div class="col-2">
+            <label for="capture_ip" class="form-label">Ip camera</label>
+        </div>
+        <div class="col-10">
+            <input value="{{ capture }}" type="text" class="form-control" id="capture_ip"
+                   aria-describedby="capture_ip_help">
+        </div>
+        <div class="col-12 mt-0">
+            <div id="capture_ip_help" class="form-text">
+                For example: http://login:password@ip:port or index of camera
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4 g-3 align-items-center">
+        <div class="col-2">
+            <label for="server_ip" class="form-label">Ip server</label>
+        </div>
+        <div class="col-10">
+            <input value="{{ server }}" type="text" class="form-control" id="server_ip"
+                   aria-describedby="server_ip_help">
+        </div>
+        <div class="col-12 mt-0">
+            <div id="server_ip_help" class="form-text">For example: @ip:port</div>
+        </div>
+    </div>
+    <div class="row mb-4 g-3 align-items-center">
+        <div class="col-2">
+            <label for="capture_rotate" class="form-label">Rotate</label>
+        </div>
+        <div class="col-10">
+            <input value="0" class="form-control" list="rotate_list" id="capture_rotate" placeholder="Rotate degrees">
+        </div>
+        <datalist id="rotate_list">
+            <option value="0" selected>
+            <option value="90">
+            <option value="180">
+            <option value="270">
+        </datalist>
+    </div>
+    <div class="row mb-4 g-3 align-items-center">
+        <div class="col-2">
+            <label for="capture_timeout" class="form-label">Timeout</label>
+        </div>
+        <div class="col-10">
+            <input value="{{ timeout }}" type="number" class="form-control" id="capture_timeout">
+        </div>
+    </div>
+    <div class="row g-3 justify-content-center">
+        <div class="col-11 btn btn-primary" id="btn_add_capture">Add</div>
+    </div>
+
+</div>

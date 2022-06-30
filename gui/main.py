@@ -4,10 +4,19 @@ import json
 from cv2 import rotate
 from requests import get
 from random import randint
-from cv2_utils import (Capture,
-                       numpy_to_base64,
-                       get_config, set_config,
-                       template)
+from cv2_utils import Capture, numpy_to_base64, template
+
+admin_url = "http://192.168.1.24/admin"
+
+capture_example = {
+    "name": "capture1",
+    "server": "192.168.1.28",
+    "capture": "0",
+    "rotate": None,
+    "timeout": 300
+}
+
+captures = []
 
 caps = []
 
@@ -31,40 +40,22 @@ def profiles(capture_name):
         response = get(f'http://{cap.server}/api/face-recognize', json=data)
         return response.json()['profiles']
     except Exception as _exp:
-        print(_exp)
         return []
 
 
 def close_callback(route=None, websockets=None):
     for cap in caps:
         cap.release()
+    if websockets:
+        for websocket in websockets:
+            websocket.close()
     exit(0)
-
-
-@eel.expose('show_config')
-def _show_config():
-    context = {
-        "config": json.dumps(get_config(), indent=4, ensure_ascii=False),
-    }
-    return template(os.path.join(src, 'templates', 'config.html'), context)
-
-
-@eel.expose('update_config')
-def _update_config(text):
-    try:
-        local_config = json.loads(text)
-        set_config(local_config)
-        return True
-    except json.JSONDecodeError:
-        return False
 
 
 @eel.expose('show_captures')
 def _show_captures():
     global caps
-    config = get_config()
-    caps = [Capture(**cap) for cap in config['captures']]
-
+    caps = [Capture(**cap) for cap in captures]
     html = []
     for cap in caps:
         image, _ = frame(cap.name)
@@ -80,9 +71,35 @@ def _show_captures():
     return '\n'.join(html)
 
 
-@eel.expose('config')
-def _config():
-    return get_config()
+@eel.expose('show_add_capture')
+def _show_add_capture():
+    return template(os.path.join(src, 'templates', 'add_capture.html'), capture_example)
+
+
+@eel.expose('add_capture')
+def _add_capture(text):
+    capture = json.loads(text)
+    captures.append(capture)
+    caps.append(Capture(**capture))
+    image, _ = frame(capture['name'])
+    context = {
+        "name": capture['name'],
+        "capture": capture['capture'],
+        "server": capture['server'],
+        "image": image,
+        "profiles": []
+    }
+    return template(os.path.join(src, 'templates', 'card.html'), context)
+
+
+@eel.expose('captures')
+def _captures():
+    return captures
+
+
+@eel.expose('admin_url')
+def _admin_url():
+    return admin_url
 
 
 @eel.expose('get_frame')
@@ -103,6 +120,6 @@ def _close():
 if __name__ == '__main__':
     this_dir = os.path.dirname(__file__)
     src = os.path.join(this_dir, 'src')
-    eel.init(src)
+    eel.init(src, js_result_timeout=5)
     port = randint(5000, 9999)
     eel.start('templates/index.html', port=port, jinja_templates='templates', close_callback=close_callback)

@@ -1,20 +1,17 @@
 <div class="card mb-3" xmlns="http://www.w3.org/1999/html">
     <div class="row g-0">
-
-        <div class="col-md-4" data-capture="{{ name }}">
+        <div class="col-md-4 capture" data-capture="{{ name }}">
             <img src="data:image/jpeg;base64, {{ image }}" class="img-fluid rounded-start" alt="frame">
         </div>
         <div class="col-md-8">
-            <div class="btn btn-primary button_{{ name }} m-3" style="width: 95%;">Reset profiles</div>
             <div class="card-body" data-info="{{ name }}">
                 <h5 class="card-title"><strong>Ip Camera: </strong>{{ capture }}</h5>
                 <h5 class="card-title"><strong>Ip Server:</strong>{{ server }}</h5>
                 <div class="row profiles_list"></div>
             </div>
+            <div class="row justify-content-center">
+                <div class="col-11 btn btn-danger button_{{ name }} mb-2">Reset profiles</div>
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-
-</script>

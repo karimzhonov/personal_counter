@@ -1,8 +1,6 @@
-import os
-import sys
-import json
 from PIL import Image
 from io import BytesIO
+from sys import platform
 from jinja2 import Template
 from threading import Thread
 from base64 import b64encode
@@ -19,18 +17,6 @@ def numpy_to_base64(image):
     return b64encode(image).decode("utf-8")
 
 
-def get_config():
-    file = os.path.join(os.path.dirname(__file__), 'config.json')
-    with open(file, 'r') as f:
-        return json.load(f)
-
-
-def set_config(data):
-    file = os.path.join(os.path.dirname(__file__), 'config.json')
-    with open(file, 'w') as f:
-        return json.dump(data, f, indent=4, ensure_ascii=False)
-
-
 def template(p, context):
     with open(p) as file:
         html = Template(file.read())
@@ -45,7 +31,7 @@ class Capture:
         self.rotate = rotate
         try:
             cap = int(capture)
-            if sys.platform == 'win32':
+            if platform == 'win32':
                 self.cap = VideoCapture(cap, CAP_DSHOW)
             else:
                 self.cap = VideoCapture(cap)
